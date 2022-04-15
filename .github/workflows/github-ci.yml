@@ -30,7 +30,7 @@ jobs:
     - name: Upload the builds
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.event.head_commit.message }}
+        name: build
         path: |
           build/apps/gateway/*
           build/apps/modem/*
