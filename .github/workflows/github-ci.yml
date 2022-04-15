@@ -32,6 +32,6 @@ jobs:
       with:
         name: build
         path: |
-          build/apps/gateway/*
-          build/apps/modem/*
-          build/apps/sensor_push/*
+          build/apps/gateway/
+          build/apps/modem/
+          build/apps/sensor_push/
