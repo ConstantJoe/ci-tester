@@ -20,12 +20,12 @@ jobs:
         release: '8-2018-q4'
 
     - name: Build stack
-      run: >
-        mkdir build && cd build
-        platform="B_L072Z_LRWAN1"
-        cmake ../stack/ -DAPP_GATEWAY=y -DAPP_MODEM=y -DAPP_SENSOR_PUSH=y -DPLATFORM=$platform -DFRAMEWORK_DEBUG_ASSERT_REBOOT=y -DMODULE_D7AP_FS_DISABLE_PERMISSIONS=y -DAPP_MODEM_FORWARD_ALP_OVER_SERIAL=y
-        make -j
-        cd ..
+      run:
+      -  mkdir build && cd build
+      -  platform="B_L072Z_LRWAN1"
+      -  cmake ../stack/ -DAPP_GATEWAY=y -DAPP_MODEM=y -DAPP_SENSOR_PUSH=y -DPLATFORM=$platform -DFRAMEWORK_DEBUG_ASSERT_REBOOT=y -DMODULE_D7AP_FS_DISABLE_PERMISSIONS=y -DAPP_MODEM_FORWARD_ALP_OVER_SERIAL=y
+      -  make -j
+      -  cd ..
 
     - name: Upload the builds
       uses: actions/upload-artifact@v2
