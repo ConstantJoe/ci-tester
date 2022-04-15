@@ -7,14 +7,14 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  run-testsuite:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up arm-none-eabi-gcc
+    - name: Set up compiler
       uses: fiam/arm-none-eabi-gcc@v1
       with:
         release: '8-2018-q4'
@@ -35,3 +35,33 @@ jobs:
           build/apps/gateway/
           build/apps/modem/
           build/apps/sensor_push/
+
+    - name: Flash builds to devices
+      run: |
+        cd build/apps/modem
+        JLinkExe -SelectEmuBySN 770821797 -CommandFile jlink-flash-full.script > flashOutput1.txt
+        JLinkExe -SelectEmuBySN 772958091 -CommandFile jlink-flash-full.script > flashOutput2.txt
+        cat flashOutput1.txt
+        cat flashOutput2.txt
+        if grep -q 'FAILED\|ERROR' "flashOutput1.txt"; then exit 1; fi
+        if grep -q 'FAILED\|ERROR' "flashOutput2.txt"; then exit 1; fi
+
+    - name: Run testsuite
+      run: |
+        rm -rf Sub-IoT-testsuite
+        git clone --recurse-submodules https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/aloxy/Sub-IoT-testsuite.git
+        cd Sub-IoT-testsuite
+        pip install -r requirements.txt
+        cd lib/pyd7a/
+        pip install -r requirements.txt
+        cd ../..
+        python2 run.py --serial-test-device=/dev/ttyUSB0 --serial-dut=/dev/ttyUSB1 -m "not band433 and not band915 and not known_issue" --junitxml report.xml -v
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: Sub-IoT-testsuite/report.xml
+
+    
+   
