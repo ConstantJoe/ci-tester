@@ -1,0 +1,49 @@
+# Site settings
+title: Sub-IoT
+email: liam.oorts@aloxy.io
+description: >
+  An opensource stack implementation of sub GHz protocols.
+
+baseurl: "/Sub-IoT-Stack" # the subpath of your site, e.g. /blog/
+url: https://sub-iot.github.io/Sub-IoT-Stack # the base hostname & protocol for your site
+git_address: https://github.com/Sub-IoT/Sub-IoT-Stack
+git_edit_address: https://github.com/Sub-IoT/Sub-IoT-Stack/blob/master/docs
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+gems:
+  - jekyll-feed
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .gitignore
+  - README.md
+defaults:
+- scope:
+    path: _posts
+    type: posts
+  values:
+    layout: post
+    sectionid: blog
+
+- scope:
+    path: _docs
+    type: docs
+  values:
+    layout: docs
+    sectionid: docs
+    seo:
+      type: "WebPage"
+
+collections:
+  docs:
+    permalink: /:collection/:path/
+    output: true
+  posts:
+    permalink: /blog/:year/:month/:day/:title/
+    output: true

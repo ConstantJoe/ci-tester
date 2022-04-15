@@ -1,0 +1,20 @@
+- title: Getting Started
+  docs:
+  - architecture
+  - supported-hardware
+  - building
+  - d7ap-intro
+  - running-examples
+  - filesystem
+- title: Other Topics
+  docs:
+  - logging
+  - tools
+  - ide-support
+  - api-docs
+  - porting
+  - out-of-tree
+  - thingsboard-integration
+  - platform-lrwan1
+  - platform-nucleo-l073
+  - platform-wstk6200a
