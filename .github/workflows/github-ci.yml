@@ -7,14 +7,61 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  run-testsuite:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up arm-none-eabi-gcc
+    - name: Set up compiler
       uses: fiam/arm-none-eabi-gcc@v1
       with:
         release: '8-2018-q4'
+
+    - name: Build stack
+      run: |
+        mkdir build && cd build
+        platform="B_L072Z_LRWAN1"
+        cmake ../stack/ -DAPP_GATEWAY=y -DAPP_MODEM=y -DAPP_SENSOR_PUSH=y -DPLATFORM=$platform -DFRAMEWORK_DEBUG_ASSERT_REBOOT=y -DMODULE_D7AP_FS_DISABLE_PERMISSIONS=y -DAPP_MODEM_FORWARD_ALP_OVER_SERIAL=y
+        make -j
+        cd ..
+
+    - name: Upload the builds
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: |
+          build/apps/gateway/
+          build/apps/modem/
+          build/apps/sensor_push/
+
+    - name: Flash builds to devices
+      run: |
+        cd build/apps/modem
+        JLinkExe -SelectEmuBySN 770821797 -CommandFile jlink-flash-full.script > flashOutput1.txt
+        JLinkExe -SelectEmuBySN 772958091 -CommandFile jlink-flash-full.script > flashOutput2.txt
+        cat flashOutput1.txt
+        cat flashOutput2.txt
+        if grep -q 'FAILED\|ERROR' "flashOutput1.txt"; then exit 1; fi
+        if grep -q 'FAILED\|ERROR' "flashOutput2.txt"; then exit 1; fi
+
+    - name: Run testsuite
+      run: |
+        rm -rf Sub-IoT-testsuite
+        git clone --recurse-submodules https://github.com/Sub-IoT/Sub-IoT-testsuite.git
+        cd Sub-IoT-testsuite
+        pip install -r requirements.txt
+        cd lib/pyd7a/
+        pip install -r requirements.txt
+        cd ../..
+        python2 run.py --serial-test-device=/dev/ttyUSB0 --serial-dut=/dev/ttyUSB1 -m "not band433 and not band915 and not known_issue" --junitxml report.xml -v
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: Sub-IoT-testsuite/report.xml
+
+    
+   
