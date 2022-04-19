@@ -24,13 +24,13 @@ jobs:
     - name: Run unit tests
       run: |
         cd build/tests/aes
-        ./test_aes &> ~/results_aes.txt
+        ./test_aes &> ../../../results_aes.txt
         cd ../alp
-        ./test_alp &> ~/results_alp.txt
+        ./test_alp &> ../../../results_alp.txt
         cd ../fec
-        ./test_fec &> ~/results_fec.txt
+        ./test_fec &> ../../../results_fec.txt
         cd ../fifo
-        ./test_fifo &> ~/results_fifo.txt
+        ./test_fifo &> ../../../results_fifo.txt
 
     - name: Upload the results
       uses: actions/upload-artifact@v2
