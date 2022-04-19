@@ -30,7 +30,7 @@ jobs:
         ls build/tests
         echo " "
         ls build/tests/alp
-        cd build/tests/test_aes
+        cd build/tests/aes
         ./test_aes
         cd ../../..
         ./build/tests/aes/test_aes &> results_aes.txt
