@@ -23,6 +23,8 @@ jobs:
 
     - name: Run unit tests
       run: |
+        ls
+        ls build/tests/alp
         ./build/tests/aes/test_aes &> results_aes.txt
         ./build/tests/alp/test_alp &> results_alp.txt
         ./build/tests/fec/test_fec &> results_fec.txt
