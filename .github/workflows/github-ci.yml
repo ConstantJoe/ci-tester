@@ -23,19 +23,10 @@ jobs:
 
     - name: Run unit tests
       run: |
-        ls build/tests/aes
-        cd build/tests/aes
-        ./test_aes
-        ./test_aes &> ../../../results_aes.txt
-        cd ../alp
-        ./test_alp
-        ./test_alp &> ../../../results_alp.txt
-        cd ../fec
-        ./test_fec
-        ./test_fec &> ../../../results_fec.txt
-        cd ../fifo
-        ./test_fifo
-        ./test_fifo &> ../../../results_fifo.txt
+        ./build/tests/aes/test_aes &> results_aes.txt
+        ./build/tests/alp/test_alp &> results_alp.txt
+        ./build/tests/fec/fec &> results_fec.txt
+        ./build/tests/fifo/test_fifo &> results_fifo.txt
 
     - name: Upload the results
       uses: actions/upload-artifact@v2
