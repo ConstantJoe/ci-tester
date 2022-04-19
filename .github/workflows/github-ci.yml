@@ -54,7 +54,7 @@ jobs:
     - name: Apply formatter
       run: |
         ./clang-format-patch.sh
-        if [[ -f clang_format.patch ]]; then; exit 1; fi
+        if [[ -f clang_format.patch ]]; then exit 1; fi
 
     - name: Upload patch
       uses: actions/upload-artifact@v2
