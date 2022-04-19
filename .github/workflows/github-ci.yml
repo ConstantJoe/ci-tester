@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  run-unit-tests:
+  Run Unit Tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,25 @@ jobs:
         if ! grep -q 'Input was decoded successfully' "results_fec.txt"; then exit 1;  fi
         if ! grep -q 'All FIFO tests passed!' "results_fifo.txt"; then exit 1;  fi
 
-  run-testsuite:
+  Check CLang Format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Apply formatter
+      run: |
+      ./clang-format-patch.sh
+      if [[ -f clang_format.patch ]]; then; exit 1; fi
+
+    - name: Upload patch
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: patch
+        path: clang_format.patch    
+
+  Run Testsuite:
 
     runs-on: self-hosted
 
