@@ -23,7 +23,9 @@ jobs:
 
     - name: Run unit tests
       run: |
+        ls build/tests/aes
         cd build/tests/aes
+        ./test_aes
         ./test_aes &> ../../../results_aes.txt
         cd ../alp
         ./test_alp &> ../../../results_alp.txt
