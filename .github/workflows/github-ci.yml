@@ -28,10 +28,13 @@ jobs:
         ./test_aes
         ./test_aes &> ../../../results_aes.txt
         cd ../alp
+        ./test_alp
         ./test_alp &> ../../../results_alp.txt
         cd ../fec
+        ./test_fec
         ./test_fec &> ../../../results_fec.txt
         cd ../fifo
+        ./test_fifo
         ./test_fifo &> ../../../results_fifo.txt
 
     - name: Upload the results
