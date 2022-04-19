@@ -21,6 +21,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
 #include "debug.h"
 
 #include "alp.h"
@@ -71,4 +73,6 @@ void bootstrap()
     printf("Success!\n");
     
     printf("Unit-tests for ALP completed\n");
+
+    exit(0);
 }
