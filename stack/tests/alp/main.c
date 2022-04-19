@@ -36,20 +36,21 @@ void test_alp_parse_length_operand()
     fifo_init(&fifo, data, sizeof(data));
 
     fifo_put_byte(&fifo, 0x01);
-    uint32_t length = alp_parse_length_operand(&fifo);
+    uint32_t length;
+    assert(alp_parse_length_operand(&fifo, &length));
     assert(length == 1);
 
     fifo_clear(&fifo);
     fifo_put_byte(&fifo, 0x40);
     fifo_put_byte(&fifo, 0x41);
-    length = alp_parse_length_operand(&fifo);
+    assert(alp_parse_length_operand(&fifo, &length));
     assert(length == 65);
 
     fifo_clear(&fifo);
     fifo_put_byte(&fifo, 0x80);
     fifo_put_byte(&fifo, 0x40);
     fifo_put_byte(&fifo, 0x01);
-    length = alp_parse_length_operand(&fifo);
+    assert(alp_parse_length_operand(&fifo, &length));
     assert(length == 0x4001);
     
     fifo_clear(&fifo);
@@ -57,7 +58,7 @@ void test_alp_parse_length_operand()
     fifo_put_byte(&fifo, 0x41);
     fifo_put_byte(&fifo, 0x10);
     fifo_put_byte(&fifo, 0x00);
-    length = alp_parse_length_operand(&fifo);
+    assert(alp_parse_length_operand(&fifo, &length));
     assert(length == 4263936);
 }
 

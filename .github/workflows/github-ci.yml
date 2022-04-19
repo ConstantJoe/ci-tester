@@ -7,6 +7,44 @@ on:
     branches: [ main ]
 
 jobs:
+
+  run-unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build stack natively
+      run: |
+        mkdir build && cd build
+        platform="NATIVE"
+        cmake ../stack/ -DPLATFORM=$platform -DCMAKE_TOOLCHAIN_FILE="../stack/cmake/toolchains/gcc.cmake" -DBUILD_UNIT_TESTS=y -DFRAMEWORK_CONSOLE_ENABLED=n -DTEST_AES=y -DTEST_FEC=y -DTEST_ALP=y -DTEST_FIFO=y -DMODULE_D7AP=n
+        make -j
+
+    - name: Run unit tests
+      run: |
+        ./tests/aes/test_aes &> results_aes.txt
+        ./tests/alp/test_alp &> results_alp.txt
+        ./tests/fec/test_fec &> results_fec.txt
+        ./tests/fifo/test_fifo &> results_fifo.txt
+
+    - name: Upload the results
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: |
+          results_aes
+          results_alp.txt
+          results_fec.txt
+          results_fifo.txt
+
+    - name: Handle results
+      run: |
+        if ! grep -q 'AES all unit tests OK !' "results_aes.txt"; then exit 1;  fi
+        if ! grep -q 'Unit-tests for ALP completed' "results_alp.txt"; then exit 1;  fi
+        if ! grep -q 'Input was decoded successfully' "results_fec.txt"; then exit 1;  fi
+        if ! grep -q 'All FIFO tests passed!' "results_fifo.txt"; then exit 1;  fi
+
   run-testsuite:
 
     runs-on: self-hosted
